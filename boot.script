@@ -1,5 +1,0 @@
-fatload mmc 0 0x10000000 Image
-fatload mmc 0 0x02a00000 zynqmp-zcu106-revA.dtb
-setenv bootargs earlycon clk_ignore_unused consoleblank=0 root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait uio_pdrv_genirq.of_id=generic-uio
-booti 0x10000000 - 0x02a00000
-

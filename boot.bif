@@ -1,7 +1,0 @@
-image : {
-       [destination_cpu = a53-0, bootloader]fsbl.elf
-       [pmufw_image]pmufw.elf
-       [destination_cpu = a53-0, exception_level = el-3, trustzone]bl31.elf
-       [destination_cpu = a53-0, exception_level = el-2]u-boot.elf
-}
-

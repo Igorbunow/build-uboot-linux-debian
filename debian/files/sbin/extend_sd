@@ -1,0 +1,4 @@
+#!/bin/bash
+
+growpart /dev/mmcblk0 2
+btrfs filesystem resize max /

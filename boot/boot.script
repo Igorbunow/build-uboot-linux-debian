@@ -1,0 +1,41 @@
+setenv bitsteam_name system.bit
+setenv kernel_image_name Image
+setenv dts_name zynqmp-zcu106-revA.dtb
+setenv bitsteam_addr 0x20000000
+setenv kernel_image_addr 0x10000000
+setenv dts_addr 0x02a00000
+setenv load_tftp_bitsteam 'dhcp ${bitsteam_addr} ${tftp_serverip}:${tftp_dir}${bitsteam_name}; fpga load 0 ${bitsteam_addr} $filesize;'
+setenv load_tftp_kernel_image 'dhcp ${kernel_image_addr} ${tftp_serverip}:${tftp_dir}${kernel_image_name}'
+setenv load_tftp_dts 'dhcp ${dts_addr} ${tftp_serverip}:${tftp_dir}${dts_name}'
+setenv load_mmc_bitsteam 'fatload mmc 0:1 ${bitsteam_addr} ${bitsteam_name}; fpga load 0 ${bitsteam_addr} $filesize;'
+setenv load_mmc_kernel_image 'fatload mmc 0 ${kernel_image_addr} ${kernel_image_name}'
+setenv load_mmc_dts 'fatload mmc 0 ${dts_addr} ${dts_name}'
+setenv boot_dev booti 0x10000000 - 0x02a00000
+setenv bootargs_mmc 'earlycon clk_ignore_unused consoleblank=0 root=/dev/mmcblk0p2 rootfstype=btrfs rw rootwait uio_pdrv_genirq.of_id=generic-uio net.ifnames=0 biosdevname=0'
+setenv bootargs_nfs 'earlycon clk_ignore_unused consoleblank=0 root=/dev/nfs ip=dhcp nfsroot='${nfs_serverip}':'${nfs_dir}',nolock,nfsvers=4 rootfstype=nfs rw rootwait uio_pdrv_genirq.of_id=generic-uio net.ifnames=0 biosdevname=0'
+
+setenv bootcmd bootmenu 10
+
+setenv bootmenu_0 Load All from MMC='setenv bootargs '${bootargs_mmc}';run load_mmc_bitsteam; run load_mmc_kernel_image; run load_mmc_dts; run boot_dev;'
+
+
+if test -n $tftp_serverip;
+then
+	if test -n $nfs_serverip;
+	then
+		setenv root_name NFS
+		setenv bootargs ${bootargs_nfs}
+	else
+		setenv root_name SD_card
+		setenv bootargs ${bootargs_mmc}
+	fi
+	setenv bootmenu_1 Load All via tftp ${tftp_serverip} root ${root_name}='run load_tftp_bitsteam; run load_tftp_kernel_image; run load_tftp_dts; run boot_dev;'
+	setenv bootmenu_2 Load bitsteam via tftp ${tftp_serverip} kernel from SD card root ${root_name}='run load_tftp_bitsteam; run load_mmc_kernel_image; run load_mmc_dts; run boot_dev;'
+	setenv bootmenu_3 Load bitsteam from SD Card  kernel via tftp ${tftp_serverip} root ${root_name}='run load_mmc_bitsteam; run load_tftp_kernel_image; run load_tftp_dts; run boot_dev;'
+	setenv bootmenu_4 Reset board=reset
+	setenv bootmenu_5 Test='ls'
+else
+	setenv bootmenu_1 Reset board=reset
+fi
+
+bootmenu 5
