@@ -4,6 +4,10 @@ This repo contains scripts, helps you to build you own boot image from sources a
 
 ## Build boot imaged
 
+Menu sample:
+
+![UBoot menu with ftp and NFS boot options](/doc/img/uboot/uboot_men_tftp_nfs.png)
+
 Resulted files are:
 
 | File | Descriptin |
@@ -15,10 +19,12 @@ Resulted files are:
 | zynqmp-zcu106-revA.dtb | Target linux kernel dts file |
 
 
-
 [create boot fsbl uboot and linux kernel](boot/README.md)
+
 
 
 ## Build debian from amd64 binaries
 
 [build debian via debootstrap](debian/README.md)
+
+![Debian boot screen](/doc/img/debian/debian_into.png)
