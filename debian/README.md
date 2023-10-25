@@ -41,11 +41,13 @@ mount --bind /dev/pts ./root/dev/pts
 For example, let's install aditional packages:
 
 ##Chroot in system:
+
 ```bash
 chroot ./root
 ```
 
 ##Install packages:
+
 ```bash
 PACKAGES="valgrind build-essential clang u-boot-tools cmake git subversion tcpdump kbuild nmap wget libboost-all-dev linux-headers-arm64 minicom picocom p7zip-full gzip zstd bzip2"
 apt update
@@ -55,11 +57,13 @@ apt clean
 ```
 
 ##Exit chroot:
+
 ```bash
 exit
 ```
 
 ## UnBindind devices
+
 ```bash
 umount ./root/sys
 umount ./root/proc
@@ -69,6 +73,7 @@ umount ./root/dev
 ```
 
 ## Fix failing `binfmt.service`:
+
 rm -rf ./root/usr/lib/binfmt.d/python3.11.conf
 rm -rf ./root/usr/lib/binfmt.d/llvm-14-runtime.binfmt.conf
 
@@ -115,7 +120,7 @@ fdisk -c=dos ultrascale_short.img
 
 And then:
 
-- create new boot partishion 'n'
+- create new boot partishion **n**
 - make it primary **p**
 - part number **1**
 - first sector **63**
@@ -280,5 +285,48 @@ chattr +i /lib/systemd/system/serial-getty@.service
 In some cases, ed bad cable and etc maybe need to set ethernet speed force 1000->1000
 ```bash
 ethtool -s eth0 speed 100 autoneg off
+```
+
+
+# Boot rootfs via NFS
+
+## Install requered packages
+
+```bash
+apt install nfs-kernel-server
+```
+
+## Config
+
+```bash
+mkdir /srv/nfs
+mkdir /srv/nfs/root
+```
+
+and copy ./root -> /srv/nfs/root or add it as in config example:
+
+
+```bash
+vim /etc/exports
+
+/srv/nfs   *(no_root_squash,no_subtree_check,rw)
+#/srv/nfs   192.168.1.19/24(no_root_squash,no_subtree_check,rw)
+```bash
+
+You may set access for all (not recommend) or only for target **192.168.1.19/24** - example target ip, need replace by your
+
+Restart nfs server:
+```bash
+systemctl restart nfs-server
+```
+
+test mount:
+```bash
+mount -t nfs4 127.0.0.1:/tmp/root /mnt
+```
+
+fstab mount:
+```bash
+192.168.1.15:/tmp/root  /  nfs4 defaults 0 0
 ```
 
