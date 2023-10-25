@@ -1,5 +1,7 @@
 # Build-ZCU106-Linux
 
+Habr article: https://habr.com/ru/articles/769988/
+
 This repo contains scripts, helps you to build you own boot image from sources and make debian from binary packages via debootstrap. Project makes for zunq ultrascale and tested on board zcu106. For most productive debuging, uboot contains menu, helps you to boot from sd card, boot.bin (contains Uboot, fsbl), kernel, bitsteem from dts and root file system via NFS. So, for fast debuding bitstream, dts, kernel image may be replaced separaply without runing any scripts
 
 ## Build boot imaged
