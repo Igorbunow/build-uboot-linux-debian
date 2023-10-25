@@ -43,7 +43,7 @@ Result files:
 You need to generate `system.bit` with the help of vivado for you own project 
 
 
-# Config boot menu
+# Config U-Boot boot menu
 
 1) Remove `uboot-redund.env` and `uboot.env` from boot partishion
 
