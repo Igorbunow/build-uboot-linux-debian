@@ -116,18 +116,17 @@ fdisk -c=dos ultrascale_short.img
 And then:
 
 - create new boot partishion 'n'
-- make it primary 'p'
-- part number '1'
-- first sector '63'
-- last sector '1048576'
-- mark bootable 'a'
-- create root partishion 'n'
-- make root primary 'p'
-- part root number '2'
-- first sector '1048577'
-- last sector '2097151'
-- write changes and exit 'w'
-- select all free space for it
+- make it primary **p**
+- part number **1**
+- first sector **63**
+- last sector **1048576**
+- mark bootable **a**
+- create root partishion **n**
+- make root primary **p**
+- part root number **2**
+- first sector **1048577**
+- last sector **2097151**
+- write changes and exit **w**
 
 
 ### Moint disk image
@@ -136,9 +135,150 @@ And then:
 losetup --partscan --find --show ultrascale_short.img
 ```
 
-In our case it determinate as `loop**0**`. In you case it may be differ. So, we'll be use `loop**XX**`
+In our case it determinate as `loop0`. In you case it may be differ. So, we'll be use `loopX`
 
 Look at mounted partishions:
 ```bash
-ls /dev | grep loop**XX**
+ls /dev | grep loopX
 ```
+The result is `loopXp1` and `loopXp2`
+
+
+### Zero mounted image partishions:
+
+```bash
+dd if=/dev/zero of=/dev/loopXp1 bs=4M
+dd if=/dev/zero of=/dev/loopXp2 bs=4M
+sync;
+```
+
+### Map partishion:
+
+```bash
+mkfs.vfat -F 32 -n "BOOT" /dev/loop0p1
+mkfs.btrfs /dev/loop0p2 -L "root"
+sync;
+```
+
+if you need in ext4 file system:
+```bash
+mkfs.ext4 /dev/loop0p2 -L "root"
+sync;
+```
+
+
+### Mount created file systems:
+
+In btrfs system case, we can use comperssion. For small embedded device best solution is `lzo` as most speedly.
+
+```bash
+mkdir /tmp/root
+mkdir /tmp/boot
+mount -o compress=lzo /dev/loop0p2 /tmp/root
+mount  /dev/loop0p1 /tmp/boot
+```
+
+
+### Copy our boot files and debian rootfs:
+
+#### Copy boot fsbl, U-Boot, dts, Linux kernel to `boot` partishion
+
+copy bitsteam: system.bit -> /tmp/boot
+
+```bash
+cp ./../boot/image/BOOT.bin  /tmp/boot
+cp ./../boot/image/boot.scr  /tmp/boot
+cp ./../boot/image/Image /tmp/boot
+cp ./../boot/image/zynqmp-zcu106-revA.dtb /tmp/boot
+chmod -R 777 /tmp/boot
+sync;
+```
+
+
+#### Copy debian rootfs to `root` partishin
+
+```bash
+cp -rpna  ./root/*  /tmp/root/
+rm /tmp/root/qemu-arm64-static
+sync;
+```
+
+if out rootfs is archived:
+
+```bash
+tar -C /tmp/root -xjf images/rootfs.tar.bz2
+sync;
+```
+
+
+### Unmount our image partishions:
+
+```bash
+umount /tmp/boot
+umount /tmp/root
+sync;
+```
+
+Unmount `loopX` device:
+```bash
+losetup -d /dev/loop0
+sync;
+```
+
+### Compress created image:
+
+You may use `gz` or `zstd` compression algoritm. `zstd` give better compression, but not supported into `rufus` windows flash prepairing tool. If you prefer windows for image creating, please, select `gz` compression.
+
+#### Compress image
+
+```bash
+gzip -9cf ultrascale_short.img > ultrascale_short.img.gz
+zstd -16v --ultra --format=zstd ultrascale_short.img -o ultrascale_short.img.zst
+```
+
+####  write it on sd card
+
+```bash
+zcat ultrascale_short.img.gz | dd bs=8M iflag=fullblock of=/dev/sdxxx status=progress
+zstdcat ultrascale_short.img.zst | dd bs=8M iflag=fullblock of=/dev/sdxxx status=progress
+```
+
+# First device boot
+
+## Extend file system to full sd card size
+
+run `extend_sd` or separatly commands for **btrfs**:
+```bash
+growpart /dev/mmcblk0 2
+btrfs filesystem resize max /
+sync;
+```
+
+in **ext2**, **ext3**, **ext4** case:
+```bash
+growpart /dev/mmcblk0 2
+resize2fs /dev/mmcblk0p2
+sync;
+```
+
+in **xfs** case:
+```bash
+growpart /dev/mmcblk0 2
+xfs_growfs /
+sync;
+```
+
+and reboot device
+
+For protect login without password do:
+```bash
+chattr +i /lib/systemd/system/serial-getty@.service
+```
+
+## downgrage link speed
+
+In some cases, ed bad cable and etc maybe need to set ethernet speed force 1000->1000
+```bash
+ethtool -s eth0 speed 100 autoneg off
+```
+
