@@ -27,4 +27,4 @@ Resulted files are:
 
 [build debian via debootstrap](debian/README.md)
 
-![Debian boot screen](/doc/img/debian/debian_into.png)
+![Debian boot screen](/doc/img/debian/debian_into_i.png)
