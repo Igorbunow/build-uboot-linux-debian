@@ -18,7 +18,7 @@ Resulted files are:
 | boot.scr | UBoot scrip |
 | Image | Linux kernel image |
 | system.bit | Target FPGA bitsteam |
-| zynqmp-zcu106-revA.dtb | Target linux kernel dts file |
+| system.dtb | Target linux kernel dts file |
 
 
 [create boot fsbl uboot and linux kernel](boot/README.md)
