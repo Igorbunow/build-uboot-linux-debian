@@ -194,7 +194,7 @@ copy bitsteam: system.bit -> /tmp/boot
 cp ./../boot/image/BOOT.bin  /tmp/boot
 cp ./../boot/image/boot.scr  /tmp/boot
 cp ./../boot/image/Image /tmp/boot
-cp ./../boot/image/zynqmp-zcu106-revA.dtb /tmp/boot
+cp ./../boot/image/system.dtb /tmp/boot
 chmod -R 777 /tmp/boot
 sync;
 ```
