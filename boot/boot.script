@@ -1,6 +1,6 @@
 setenv bitsteam_name system.bit
 setenv kernel_image_name Image
-setenv dts_name zynqmp-zcu106-revA.dtb
+setenv dts_name system.dtb
 setenv bitsteam_addr 0x20000000
 setenv kernel_image_addr 0x10000000
 setenv dts_addr 0x02a00000
