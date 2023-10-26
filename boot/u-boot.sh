@@ -3,10 +3,22 @@
 export WORK=$(pwd)
 export CROSS_COMPILE=aarch64-linux-gnu-
 export ARCH=aarch64
+LOCAL_DTS_PATH="./arch/arm/dts/"
+
 cd ${WORK}/u-boot-xlnx
 make distclean
 #cp ./../configs/uboot/xilinx_ulrascale_debug_defconfig ./arch/arm64/configs/
+
+echo "Adding custom UBoot defconfig"
 cp ./../configs/uboot/xilinx_ulrascale_debug_defconfig ./configs/
+
+echo "Adding custom Dts"
+cp ./../configs/dts/* ${LOCAL_DTS_PATH}
+git checkout ${LOCAL_DTS_PATH}Makefile
+cat ./../configs/dts/Makefile.in > ${LOCAL_DTS_PATH}Makefile_
+cat ${LOCAL_DTS_PATH}Makefile >> ${LOCAL_DTS_PATH}Makefile_
+mv ${LOCAL_DTS_PATH}Makefile_  ${LOCAL_DTS_PATH}Makefile
+rm ${LOCAL_DTS_PATH}Makefile.in
 #cp ./../configs/uboot/zynqmp-u-boot.dtsi ./arch/arm/dts/
 #xilinx_zynqmp_virt_defconfig
 #make savedefconfig

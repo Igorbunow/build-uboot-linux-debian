@@ -1,0 +1,1 @@
+dtb-$(CONFIG_ARCH_ZYNQMP) += zynqmp-zcu106-custom.dtb
