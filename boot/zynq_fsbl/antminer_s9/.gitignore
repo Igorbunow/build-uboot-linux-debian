@@ -4,3 +4,8 @@ antminer_s9.hw
 antminer_s9.ip_user_files
 antminer_s9.sim
 antminer_s9.srcs
+
+bd/zynq_bd/hdl/
+bd/zynq_bd/ip/zynq_bd_auto_pc_0/
+bd/zynq_bd/sim/
+bd/zynq_bd/synth/
