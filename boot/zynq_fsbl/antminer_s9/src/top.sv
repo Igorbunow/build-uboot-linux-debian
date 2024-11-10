@@ -71,9 +71,9 @@ module top(
         .FIXED_IO_ps_clk(FIXED_IO_ps_clk),
         .FIXED_IO_ps_porb(FIXED_IO_ps_porb),
         .FIXED_IO_ps_srstb(FIXED_IO_ps_srstb),
-        .aux_reset_in(aux_reset_in),
-        .gpio_i_tri_i(gpio_i_tri_i),
-        .gpio_o_tri_o(gpio_o_tri_o));
+        .aux_reset_in(BUTTONS[1]),
+        .gpio_i_tri_i(BUTTONS[0]),
+        .gpio_o_tri_o({LEDS, Beep}));
     
     
 endmodule
