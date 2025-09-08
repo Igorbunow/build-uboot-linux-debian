@@ -4,7 +4,7 @@ ARCH=arm64
 REPO=http://httpredir.debian.org/debian/
 VERSION=stable
 BUILD_DIR=./root
-PACKAGES="cloud-guest-utils kmod mtd-utils openssh-server vim mc ethtool bind9-dnsutils initscripts isc-dhcp-client xxd htop net-tools logrotate btrfs-progs e2fsprogs exfatprogs util-linux fdisk u-boot-tools parted fdisk nfs-common ftp-ssl ftp usbutils lsof lsscsi lshw pciutils i2c-tools spi-tools iptables"
+PACKAGES="cloud-guest-utils kmod mtd-utils openssh-server vim mc ethtool bind9-dnsutils initscripts isc-dhcp-client xxd htop net-tools logrotate btrfs-progs e2fsprogs exfatprogs util-linux fdisk u-boot-tools parted fdisk nfs-common ftp-ssl ftp usbutils lsof lsscsi lshw pciutils i2c-tools spi-tools iptables gpiod"
 
 mkdir -p ${BUILD_DIR}
 
