@@ -45,6 +45,8 @@ cp -r -n -f -u ./files/* ./root/
 echo "- lib and sbin separately"
 rm ./root/lib/systemd/system/serial-getty@.service
 cp -r -n -f -u ./files/lib/* ./root/lib/
+cp -r -n -f -u ./files/etc/* ./root/etc/
 cp -r -n -f -u ./files/sbin/* ./root/sbin/
 cp -r -n -f -u ./root/root/.vimrc ./root/home/${USER_ADD}
 chroot ./root/  chown -R ${USER_ADD}:${USER_ADD} ./home/${USER_ADD}
+chroot ./root/ systemctl enable rc-local
